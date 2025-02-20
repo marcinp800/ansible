@@ -1,0 +1,10 @@
+- name: Aktualizacja hasła użytkownika
+  hosts: remote
+  become: yes
+  vars:
+    nazwa_uzytkownika: zbyszek
+  tasks:
+    - name: Aktualizacja hasła dla użytkownika
+      ansible.builtin.user:
+        name: nazwa_uzytkownika
+        password: "{{ 'nowe_haslo' | password_hash('sha512') }}"
