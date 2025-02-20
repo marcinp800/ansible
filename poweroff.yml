@@ -1,0 +1,8 @@
+---
+- name: Power off all hosts
+  hosts: web
+  become: yes
+  tasks:
+    - name: Power off the host
+      ansible.builtin.command:
+        cmd: /sbin/poweroff

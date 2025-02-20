@@ -1,0 +1,15 @@
+- name: Usuwanie użytkownika
+  hosts: remote
+  become: yes
+  vars:
+    nazwa_uzytkownika: zbyszek
+  tasks:
+    - name: Usunięcie użytkownika
+      ansible.builtin.user:
+        name: "{{ nazwa_uzytkownika }}"
+        state: absent
+      
+    - name: Usunięcie katalogu domowego użytkownika (opcjonalnie)
+      ansible.builtin.file:
+        path: /home/"{{ nazwa_uzytkownika }}"
+        state: absent

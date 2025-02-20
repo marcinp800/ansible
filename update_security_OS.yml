@@ -1,0 +1,16 @@
+- name: Aktualizacja zabezpieczeń systemu operacyjnego
+  hosts: remote
+  become: yes
+  tasks:
+  
+    - name: Aktualizacja zabezpieczeń (dla systemów opartych na Red Hat, takich jak CentOS, RHEL)
+      ansible.builtin.yum:
+        name: '*'
+        security: yes
+        state: latest
+
+    - name: Aktualizacja zabezpieczeń (dla systemów opartych na Fedora)
+      ansible.builtin.dnf:
+        name: '*'
+        security: yes
+        state: latest

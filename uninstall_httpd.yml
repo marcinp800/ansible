@@ -1,0 +1,51 @@
+---
+- name: Stop and remove Apache HTTPD service
+  hosts: remote
+  vars:
+    web_pkg: httpd
+    firewall_pkg: firewalld
+    web_service: httpd
+    firewall_service: firewalld
+    rule: http
+
+  tasks:
+    - name: The firewall port for {{ rule }} is closed
+      ansible.posix.firewalld:
+        service: "{{ rule }}"
+        permanent: true
+        immediate: true
+        state: disabled   
+
+    - name: The {{ web_service }} service is stopped and disabled
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        enabled: false
+        state: stopped
+
+    - name: The {{ firewall_service }} service is stopped and disabled
+      ansible.builtin.service:
+        name: "{{ firewall_service }}"
+        enabled: false
+        state: stopped
+    
+    - name: Web content is removed
+      ansible.builtin.file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Required packages are uninstalled
+      ansible.builtin.dnf:
+        name:
+          - "{{ web_pkg  }}"
+          - "{{ firewall_pkg }}"
+        state: absent 
+
+   
+- name: Verify the Apache service
+  hosts: myself
+  become: false
+  tasks:
+    - name: Ensure the webserver is unreachable
+      ansible.builtin.uri:
+        url: http://192.168.1.113:80
+        status_code: -1

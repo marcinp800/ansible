@@ -1,0 +1,17 @@
+- name: Tworzenie użytkownika
+  hosts: remote
+  become: yes
+  vars: 
+    nowy_uzytkownik: zbyszek
+  tasks:
+    - name: Tworzenie nowego użytkownika
+      ansible.builtin.user:
+        name: "{{ nowy_uzytkownik }}"
+        comment: "Nowy użytkownik"
+        shell: /bin/bash
+        state: present
+      
+    - name: Ustawienie hasła dla nowego użytkownika
+      ansible.builtin.command: echo "nowehaslo" | passwd --stdin "{{ nowy_uzytkownik }}"
+      args:
+        creates: /home/"{{ nowy_uzytkownik }}"/.bashrc

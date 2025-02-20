@@ -1,0 +1,17 @@
+---
+- name: Aktualizacja systemu operacyjnego
+  hosts: remote
+  become: yes
+  tasks:
+  
+    - name: Aktualizacja systemu (dla systemów opartych na Red Hat, takich jak CentOS, RHEL)
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+        update_only: yes
+
+    - name: Aktualizacja systemu (dla systemów opartych na Fedora)
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+        update_only: yes
